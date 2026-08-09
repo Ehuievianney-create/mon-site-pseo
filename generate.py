@@ -71,7 +71,7 @@ html_template = """<!DOCTYPE html>
 </html>
 """
 
-# Template Page d'accueil (Index) - Ajout de la balise de vérification Google
+# Template Page d'accueil (Index)
 index_template = """<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -128,8 +128,10 @@ for i in range(1, 75):
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(index_template.format(links=links_html, base_url=BASE_URL))
 
-# 3. Génération automatique du sitemap.xml
-urlset = ET.Element("urlset", xmlns="http://www.sitemap.org/schemas/sitemap/0.9")
+# 3. Génération automatique du sitemap.xml avec l'espace de nom officiel
+urlset = ET.Element("urlset", {
+    "xmlns": "http://www.sitemaps.org/schemas/sitemap/0.9"
+})
 
 # Ajouter l'index
 url_elem = ET.SubElement(urlset, "url")
@@ -158,5 +160,5 @@ with open("robots.txt", "w", encoding="utf-8") as f:
 print(f" SUCCÈS :")
 print(f" - {count} pages HTML générées")
 print(f" - index.html généré (avec balise de vérification Google)")
-print(f" - sitemap.xml généré avec {count + 1} URLs sous https://")
+print(f" - sitemap.xml généré avec {count + 1} URLs sous https:// (Namespace valide)")
 print(f" - robots.txt généré")
