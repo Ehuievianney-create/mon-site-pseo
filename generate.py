@@ -1,8 +1,8 @@
 import os
 import xml.etree.ElementTree as ET
 
-# 🌐 Remplace par ton URL Vercel réelle une fois déployé
-BASE_URL = "mon-site-pseo.vercel.app"
+# 🌐 URL officielle de production avec https://
+BASE_URL = "https://mon-site-pseo.vercel.app"
 
 # Base de données d'exemples de formats, outils et specs tech
 topics = [
@@ -15,7 +15,7 @@ topics = [
     ("mov-to-mp4", "Exporter MOV en MP4 pour Premiere Pro", "Editing", "Auto", "ProRes/H.264"),
 ]
 
-# Template HTML optimisé SEO (avec Canonical & OpenGraph)
+# Template HTML pour les sous-pages
 html_template = """<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -71,12 +71,13 @@ html_template = """<!DOCTYPE html>
 </html>
 """
 
-# Template Page d'accueil (Index)
+# Template Page d'accueil (Index) - Ajout de la balise de vérification Google
 index_template = """<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="Hw5HcXkd5TKh4zwp_48lZS02Vbcq26puFir5GiVd_dY" />
     <title>Base de Données Tech & Conversion Média</title>
     <link rel="canonical" href="{base_url}/" />
     <style>
@@ -156,6 +157,6 @@ with open("robots.txt", "w", encoding="utf-8") as f:
 
 print(f" SUCCÈS :")
 print(f" - {count} pages HTML générées")
-print(f" - index.html généré")
-print(f" - sitemap.xml généré avec {count + 1} URLs")
+print(f" - index.html généré (avec balise de vérification Google)")
+print(f" - sitemap.xml généré avec {count + 1} URLs sous https://")
 print(f" - robots.txt généré")
