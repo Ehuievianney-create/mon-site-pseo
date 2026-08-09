@@ -21,6 +21,7 @@ html_template = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="Hw5HcXkd5TKh4zwp_48lZS02Vbcq26puFir5GiVd_dY" />
     <title>{title} - Guide & Spécifications</title>
     <meta name="description" content="Guide complet et fiches techniques : {title}. Spécifications, codecs et paramètres recommandés.">
     <link rel="canonical" href="{canonical_url}" />
