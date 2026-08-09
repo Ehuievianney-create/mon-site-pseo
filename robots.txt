@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: mon-site-pseo.vercel.app/sitemap.xml

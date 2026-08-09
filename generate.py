@@ -1,4 +1,8 @@
 import os
+import xml.etree.ElementTree as ET
+
+# 🌐 Remplace par ton URL Vercel réelle une fois déployé
+BASE_URL = "mon-site-pseo.vercel.app"
 
 # Base de données d'exemples de formats, outils et specs tech
 topics = [
@@ -11,7 +15,7 @@ topics = [
     ("mov-to-mp4", "Exporter MOV en MP4 pour Premiere Pro", "Editing", "Auto", "ProRes/H.264"),
 ]
 
-# Template HTML optimisé SEO & Publicité
+# Template HTML optimisé SEO (avec Canonical & OpenGraph)
 html_template = """<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -19,6 +23,7 @@ html_template = """<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title} - Guide & Spécifications</title>
     <meta name="description" content="Guide complet et fiches techniques : {title}. Spécifications, codecs et paramètres recommandés.">
+    <link rel="canonical" href="{canonical_url}" />
     <style>
         body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; background-color: #f8f9fa; color: #212529; }}
         header {{ background: #007bff; color: white; padding: 20px; text-align: center; }}
@@ -27,7 +32,8 @@ html_template = """<!DOCTYPE html>
         table {{ width: 100%; border-collapse: collapse; margin: 20px 0; }}
         th, td {{ border: 1px solid #dee2e6; padding: 12px; text-align: left; }}
         th {{ background-color: #f1f3f5; }}
-        a {{ color: #007bff; text-style: none; }}
+        a {{ color: #007bff; text-decoration: none; }}
+        a:hover {{ text-decoration: underline; }}
     </style>
 </head>
 <body>
@@ -71,15 +77,17 @@ index_template = """<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Base de Données Tech & Conversion Média</title>
+    <link rel="canonical" href="{base_url}/" />
     <style>
         body {{ font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; line-height: 1.6; }}
-        ul {{ list-style-type: none; padding: 0; }}
-        li {{ margin-bottom: 10px; background: #f8f9fa; padding: 10px; border-radius: 4px; }}
+        ul {{ list-style-type: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }}
+        li {{ background: #f8f9fa; padding: 12px; border-radius: 4px; border: 1px solid #e9ecef; }}
         a {{ color: #007bff; text-decoration: none; font-weight: bold; }}
+        a:hover {{ text-decoration: underline; }}
     </style>
 </head>
 <body>
-    <h1>Repertoire Complet des Fiches Techniques</h1>
+    <h1>Répertoire Complet des Fiches Techniques</h1>
     <p>Sélectionnez un guide ci-dessous pour voir les spécifications d'encodage :</p>
     <ul>
         {links}
@@ -88,33 +96,65 @@ index_template = """<!DOCTYPE html>
 </html>
 """
 
-os.makedirs(".", exist_ok=True)
-
-# Génération des pages
+# 1. Génération des pages HTML
 links_html = ""
+generated_files = []
 count = 0
 
-# Boucle pour générer les pages basées sur les sujets
-for i in range(1, 75):  # Génère la structure déclinée
+for i in range(1, 75):
     for slug, title, category, bitrate, codec in topics:
-        full_slug = f"{slug}-v{i}"
+        full_slug = f"{slug}-v{i}.html"
         full_title = f"{title} (Option #{i})"
+        canonical_url = f"{BASE_URL}/{full_slug}"
         
         content = html_template.format(
             title=full_title,
             category=category,
             bitrate=bitrate,
-            codec=codec
+            codec=codec,
+            canonical_url=canonical_url
         )
         
-        with open(f"{full_slug}.html", "w", encoding="utf-8") as f:
+        with open(full_slug, "w", encoding="utf-8") as f:
             f.write(content)
         
-        links_html += f'<li><a href="{full_slug}.html">{full_title}</a></li>\n'
+        generated_files.append(full_slug)
+        links_html += f'<li><a href="{full_slug}">{full_title}</a></li>\n'
         count += 1
 
-# Génération de la page d'accueil (index.html)
+# 2. Génération de la page d'accueil (index.html)
 with open("index.html", "w", encoding="utf-8") as f:
-    f.write(index_template.format(links=links_html))
+    f.write(index_template.format(links=links_html, base_url=BASE_URL))
 
-print(f"✅ SUCCÈS : {count} pages HTML et la page index.html ont été créées dans le dossier !")
+# 3. Génération automatique du sitemap.xml
+urlset = ET.Element("urlset", xmlns="http://www.sitemap.org/schemas/sitemap/0.9")
+
+# Ajouter l'index
+url_elem = ET.SubElement(urlset, "url")
+loc = ET.SubElement(url_elem, "loc")
+loc.text = f"{BASE_URL}/"
+
+# Ajouter toutes les pages
+for file_name in generated_files:
+    url_elem = ET.SubElement(urlset, "url")
+    loc = ET.SubElement(url_elem, "loc")
+    loc.text = f"{BASE_URL}/{file_name}"
+
+tree = ET.ElementTree(urlset)
+ET.indent(tree, space="  ", level=0)
+tree.write("sitemap.xml", encoding="utf-8", xml_declaration=True)
+
+# 4. Génération automatique du robots.txt
+robots_content = f"""User-agent: *
+Allow: /
+
+Sitemap: {BASE_URL}/sitemap.xml
+"""
+with open("robots.txt", "w", encoding="utf-8") as f:
+    f.write(robots_content)
+
+print(f" SUCCÈS :")
+print(f" - {count} pages HTML générées")
+print(f" - index.html généré")
+print(f" - sitemap.xml généré avec {count + 1} URLs")
+print(f" - robots.txt généré")
