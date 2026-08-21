@@ -2,30 +2,149 @@ import os
 import json
 import xml.etree.ElementTree as ET
 
-# 🌐 URL officielle de production avec https://
+# 🌐 URL officielle de production
 BASE_URL = "https://mon-site-pseo.vercel.app"
 
-# Configuration des dossiers
-OUTPUT_DIR = "public"
-os.makedirs(OUTPUT_DIR, exist_ok=True)
+# Configuration : Génération directement à la racine
+OUTPUT_DIR = "."
 
-# 1. Base de données d'exemples de formats, outils et specs tech (12 sujets)
+# 1. Base de données des sujets avec offres d'affiliation ciblées
 TOPICS = [
-    {"slug": "mp4-to-mp3", "title": "Convertir MP4 en MP3", "category": "Audio/Video", "bitrate": "320 kbps", "codec": "AAC/MPEG"},
-    {"slug": "youtube-4k-bitrate", "title": "Bitrate Recommandé YouTube 4K", "category": "Video Render", "bitrate": "45-68 Mbps", "codec": "H.264 / HEVC"},
-    {"slug": "flac-vs-wav", "title": "FLAC vs WAV : Comparatif Qualité", "category": "Audio Formats", "bitrate": "1411 kbps", "codec": "Lossless"},
-    {"slug": "mkv-to-mp4", "title": "Convertir MKV en MP4 sans Perte", "category": "Video Conversion", "bitrate": "Variable", "codec": "H.264"},
-    {"slug": "png-vs-jpeg", "title": "PNG vs JPEG : Compression et Transparence", "category": "Image Formats", "bitrate": "Lossless/Lossy", "codec": "PNG/JPG"},
-    {"slug": "webp-converter", "title": "Optimisation WebP pour Sites Web", "category": "Web Performance", "bitrate": "75% Compression", "codec": "WebP"},
-    {"slug": "mov-to-mp4", "title": "Exporter MOV en MP4 pour Premiere Pro", "category": "Editing", "bitrate": "Auto", "codec": "ProRes/H.264"},
-    {"slug": "pdf-to-docx", "title": "Convertir PDF en Word Éditable", "category": "Document Conversion", "bitrate": "N/A", "codec": "PDF/DOCX"},
-    {"slug": "heic-to-jpg", "title": "Convertir Photo HEIC iOS en JPG", "category": "Image Formats", "bitrate": "Haute Qualité", "codec": "HEIC/JPG"},
-    {"slug": "audio-transcription", "title": "Transcription Audio en Texte", "category": "Audio AI", "bitrate": "128 kbps", "codec": "WAV/TXT"},
-    {"slug": "compress-pdf", "title": "Compresser Fichier PDF pour Email", "category": "Document Optimization", "bitrate": "Medium DPI", "codec": "PDF"},
-    {"slug": "srt-subtitle-extractor", "title": "Extraire Sous-Titres SRT de Vidéo", "category": "Video Subtitles", "bitrate": "N/A", "codec": "SRT/UTF-8"}
+    {
+        "slug": "mp4-to-mp3", 
+        "title": "Convertir MP4 en MP3", 
+        "category": "Audio/Video", 
+        "bitrate": "320 kbps", 
+        "codec": "AAC/MPEG",
+        "aff_title": "🎬 Logiciel Recommandé : Movavi Video Converter",
+        "aff_desc": "Convertissez vos fichiers MP4 en MP3 à grande vitesse sans perte de qualité audio. Supporte le traitement par lot.",
+        "aff_link": "https://www.movavi.com/fr/",
+        "aff_cta": "Essayer gratuitement Movavi"
+    },
+    {
+        "slug": "youtube-4k-bitrate", 
+        "title": "Bitrate Recommandé YouTube 4K", 
+        "category": "Video Render", 
+        "bitrate": "45-68 Mbps", 
+        "codec": "H.264 / HEVC",
+        "aff_title": "🚀 Optimisez vos rendus 4K avec Wondershare Filmora",
+        "aff_desc": "Exportez des vidéos 4K fluides aux profils de bitrate idéaux pour YouTube Shorts et vidéos longues.",
+        "aff_link": "https://filmora.wondershare.fr/",
+        "aff_cta": "Télécharger Filmora Pro"
+    },
+    {
+        "slug": "flac-vs-wav", 
+        "title": "FLAC vs WAV : Comparatif Qualité", 
+        "category": "Audio Formats", 
+        "bitrate": "1411 kbps", 
+        "codec": "Lossless",
+        "aff_title": "🎧 Traitement Audio Studio avec Adobe Audition",
+        "aff_desc": "Nettoyez, éditez et convertissez vos pistes Lossless (FLAC, WAV) avec les outils standard de l'industrie.",
+        "aff_link": "https://www.adobe.com/fr/products/audition.html",
+        "aff_cta": "Découvrir Adobe Audition"
+    },
+    {
+        "slug": "mkv-to-mp4", 
+        "title": "Convertir MKV en MP4 sans Perte", 
+        "category": "Video Conversion", 
+        "bitrate": "Variable", 
+        "codec": "H.264",
+        "aff_title": "⚡ EaseUS Video Converter : Conversion Ultra Rapide",
+        "aff_desc": "Convertissez vos fichiers MKV lourds en MP4 universel en gardant toutes les pistes sous-titres et audio.",
+        "aff_link": "https://fr.easeus.com/multimedia/video-converter.html",
+        "aff_cta": "Obtenir EaseUS Converter"
+    },
+    {
+        "slug": "png-vs-jpeg", 
+        "title": "PNG vs JPEG : Compression et Transparence", 
+        "category": "Image Formats", 
+        "bitrate": "Lossless/Lossy", 
+        "codec": "PNG/JPG",
+        "aff_title": "🎨 Canva Pro : Optimisation d'Images Web & Transparence",
+        "aff_desc": "Créez et exportez des visuels PNG haute résolution ou JPEG compressés en un clic.",
+        "aff_link": "https://www.canva.com/fr_fr/",
+        "aff_cta": "Tester Canva Pro Gratuitement"
+    },
+    {
+        "slug": "webp-converter", 
+        "title": "Optimisation WebP pour Sites Web", 
+        "category": "Web Performance", 
+        "bitrate": "75% Compression", 
+        "codec": "WebP",
+        "aff_title": "⚡ Boostez la vitesse de votre site avec WP Rocket",
+        "aff_desc": "Servez automatiquement vos images au format WebP et améliorez votre score Google Core Web Vitals.",
+        "aff_link": "https://wp-rocket.me/fr/",
+        "aff_cta": "Booster mon site avec WP Rocket"
+    },
+    {
+        "slug": "mov-to-mp4", 
+        "title": "Exporter MOV en MP4 pour Premiere Pro", 
+        "category": "Editing", 
+        "bitrate": "Auto", 
+        "codec": "ProRes/H.264",
+        "aff_title": "🎬 Suite Adobe Creative Cloud pour Monteurs",
+        "aff_desc": "Profitez de Premiere Pro et Media Encoder pour gérer tous vos exports MOV/MP4 sans aucun bug de codec.",
+        "aff_link": "https://www.adobe.com/fr/creativecloud.html",
+        "aff_cta": "Voir les offres Creative Cloud"
+    },
+    {
+        "slug": "pdf-to-docx", 
+        "title": "Convertir PDF en Word Éditable", 
+        "category": "Document Conversion", 
+        "bitrate": "N/A", 
+        "codec": "PDF/DOCX",
+        "aff_title": "📄 PDFelement : L'alternative puissante à Adobe Acrobat",
+        "aff_desc": "Editez, convertissez et OCRisez tous vos documents PDF en fichiers Word modifiables en quelques secondes.",
+        "aff_link": "https://pdf.wondershare.fr/",
+        "aff_cta": "Télécharger PDFelement"
+    },
+    {
+        "slug": "heic-to-jpg", 
+        "title": "Convertir Photo HEIC iOS en JPG", 
+        "category": "Image Formats", 
+        "bitrate": "Haute Qualité", 
+        "codec": "HEIC/JPG",
+        "aff_title": "📱 CopyTrans Manager : Gérez vos Photos iPhone facilement",
+        "aff_desc": "Transférez et convertissez automatiquement vos photos iPhone HEIC vers Windows au format JPG.",
+        "aff_link": "https://www.copytrans.fr/",
+        "aff_cta": "Découvrir CopyTrans"
+    },
+    {
+        "slug": "audio-transcription", 
+        "title": "Transcription Audio en Texte", 
+        "category": "Audio AI", 
+        "bitrate": "128 kbps", 
+        "codec": "WAV/TXT",
+        "aff_title": "🤖 Descript : Transcription IA et Édition Audio Automatique",
+        "aff_desc": "Transcrivez vos fichiers audio en texte avec une précision de 95% et éditez le son en modifiant directement le texte.",
+        "aff_link": "https://www.descript.com/",
+        "aff_cta": "Essayer Descript IA"
+    },
+    {
+        "slug": "compress-pdf", 
+        "title": "Compresser Fichier PDF pour Email", 
+        "category": "Document Optimization", 
+        "bitrate": "Medium DPI", 
+        "codec": "PDF",
+        "aff_title": "💼 Smallpdf Pro : Compressez et Organisez vos Fichiers",
+        "aff_desc": "Réduisez la taille de vos documents PDF jusqu'à 80% tout en conservant la netteté du texte et des images.",
+        "aff_link": "https://smallpdf.com/fr",
+        "aff_cta": "Essayer Smallpdf Pro"
+    },
+    {
+        "slug": "srt-subtitle-extractor", 
+        "title": "Extraire Sous-Titres SRT de Vidéo", 
+        "category": "Video Subtitles", 
+        "bitrate": "N/A", 
+        "codec": "SRT/UTF-8",
+        "aff_title": "🎥 Kapwing : Sous-titrage Automatique par IA",
+        "aff_desc": "Générez, extrayez et traduisez des fichiers de sous-titres SRT pour TikTok, Reels et YouTube en un clic.",
+        "aff_link": "https://www.kapwing.com/",
+        "aff_cta": "Créer des sous-titres avec Kapwing"
+    }
 ]
 
-# 2. Cas d'usage et contextes (15 déclinaisons)
+# 2. Cas d'usage
 USES = [
     {"slug": "gratuit-en-ligne", "name": "Gratuit en Ligne"},
     {"slug": "pour-montage-pro", "name": "pour Montage Vidéo Pro"},
@@ -44,7 +163,7 @@ USES = [
     {"slug": "pour-reseaux-sociaux", "name": "pour Réseaux Sociaux"}
 ]
 
-# 3. Formats de révision et cibles (12 variations)
+# 3. Formats de révision
 TARGETS = [
     {"slug": "guide-2026", "name": "Guide 2026"},
     {"slug": "methode-facile", "name": "Méthode Facile"},
@@ -60,7 +179,7 @@ TARGETS = [
     {"slug": "parametres-recommandes", "name": "Paramètres Recommandés"}
 ]
 
-# Template HTML pour les sous-pages
+# Template HTML avec bloc d'affiliation stylisé
 html_template = """<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -74,7 +193,15 @@ html_template = """<!DOCTYPE html>
         body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; background-color: #f8f9fa; color: #212529; line-height: 1.6; }}
         header {{ background: #007bff; color: white; padding: 20px; text-align: center; }}
         .container {{ max-width: 800px; margin: 30px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }}
-        .ad-slot {{ background: #e9ecef; border: 2px dashed #ced4da; text-align: center; padding: 25px; margin: 25px 0; font-weight: bold; color: #6c757d; border-radius: 4px; }}
+        
+        /* Style du bloc d'affiliation */
+        .affiliate-box {{ background-color: #f0f7ff; border: 2px solid #007bff; border-radius: 8px; padding: 20px; margin: 25px 0; }}
+        .affiliate-box h3 {{ margin-top: 0; color: #0056b3; font-size: 1.2rem; }}
+        .affiliate-box p {{ font-size: 0.95rem; color: #333; margin-bottom: 15px; }}
+        .aff-btn {{ display: inline-block; background-color: #28a745; color: white !important; font-weight: bold; padding: 12px 20px; border-radius: 5px; text-decoration: none; transition: background 0.2s; }}
+        .aff-btn:hover {{ background-color: #218838; text-decoration: none; }}
+
+        .ad-slot {{ background: #e9ecef; border: 2px dashed #ced4da; text-align: center; padding: 15px; margin: 20px 0; font-weight: bold; color: #6c757d; border-radius: 4px; font-size: 0.85rem; }}
         table {{ width: 100%; border-collapse: collapse; margin: 20px 0; }}
         th, td {{ border: 1px solid #dee2e6; padding: 12px; text-align: left; }}
         th {{ background-color: #f1f3f5; }}
@@ -91,7 +218,7 @@ html_template = """<!DOCTYPE html>
     <div class="container">
         <h1>{full_title}</h1>
         
-        <!-- ESPACE PUB HAUT -->
+        <!-- EMPLACEMENT PUB HAUT (AdSense / Ezoic) -->
         <div class="ad-slot">[ EMPLACEMENT PUB HIGH RPM ]</div>
 
         <p>Catégorie : <strong>{category}</strong> | Usage : <strong>{use_name}</strong></p>
@@ -105,12 +232,19 @@ html_template = """<!DOCTYPE html>
             <tr><td>Format du Guide</td><td>{target_name}</td></tr>
         </table>
 
-        <!-- ESPACE PUB MILIEU -->
+        <!-- BLOC D'AFFILIATION DYNAMIQUE CIBLÉ -->
+        <div class="affiliate-box">
+            <h3>{aff_title}</h3>
+            <p>{aff_desc}</p>
+            <a href="{aff_link}" target="_blank" rel="nofollow sponsored" class="aff-btn">{aff_cta} →</a>
+        </div>
+
+        <!-- EMPLACEMENT PUB MILIEU -->
         <div class="ad-slot">[ EMPLACEMENT PUB MILIEU ]</div>
 
         <h2>Recommandations d'Optimisation</h2>
         <p>Pour obtenir les meilleures performances dans la catégorie <strong>{category}</strong> ({use_name}), assurez-vous de configurer vos exportations selon les valeurs indiquées ci-dessus.</p>
-        
+
         <h2>Foire Aux Questions</h2>
         <p><strong>Est-ce adapté pour un usage professionnel ?</strong><br>Oui, cette méthode ({target_name}) est optimisée pour garantir la compatibilité maximale et un rendu rapide.</p>
 
@@ -121,7 +255,7 @@ html_template = """<!DOCTYPE html>
             {related_links}
         </ul>
 
-        <!-- ESPACE PUB BAS -->
+        <!-- EMPLACEMENT PUB BAS -->
         <div class="ad-slot">[ EMPLACEMENT PUB BAS ]</div>
     </div>
 </body>
@@ -171,18 +305,18 @@ for topic in TOPICS:
             })
 
 total_pages = len(all_pages)
-print(f"🚀 Début de la génération de {total_pages} pages pSEO...")
+print(f"🚀 Début de la génération de {total_pages} pages pSEO optimisées pour l'affiliation...")
 
 generated_files = []
 links_html = ""
 
-# 2. Écriture des fichiers HTML dans le dossier public/
+# 2. Écriture des fichiers HTML à la racine du projet
 for idx, page in enumerate(all_pages):
     file_name = f"{page['slug']}.html"
     file_path = os.path.join(OUTPUT_DIR, file_name)
     canonical_url = f"{BASE_URL}/{file_name}"
 
-    # Maillage interne : Récupérer 5 liens de pages connexes
+    # Maillage interne
     related_items = [all_pages[(idx + i * 43) % total_pages] for i in range(1, 6)]
     related_links_html = "".join([f'<li><a href="/{r["slug"]}.html">{r["title"]}</a></li>' for r in related_items])
 
@@ -193,6 +327,10 @@ for idx, page in enumerate(all_pages):
         target_name=page['tgt']['name'],
         bitrate=page['topic']['bitrate'],
         codec=page['topic']['codec'],
+        aff_title=page['topic']['aff_title'],
+        aff_desc=page['topic']['aff_desc'],
+        aff_link=page['topic']['aff_link'],
+        aff_cta=page['topic']['aff_cta'],
         canonical_url=canonical_url,
         related_links=related_links_html
     )
@@ -202,25 +340,22 @@ for idx, page in enumerate(all_pages):
 
     generated_files.append(file_name)
     
-    # Afficher les 150 premiers liens sur la page d'accueil pour garder un DOM léger
     if idx < 150:
         links_html += f'<li><a href="/{file_name}">{page["title"]}</a></li>\n'
 
-# 3. Génération de la page d'accueil (index.html)
+# 3. Génération de index.html
 with open(os.path.join(OUTPUT_DIR, "index.html"), "w", encoding="utf-8") as f:
     f.write(index_template.format(links=links_html, base_url=BASE_URL))
 
-# 4. Génération automatique du sitemap.xml
+# 4. Génération du sitemap.xml
 urlset = ET.Element("urlset", {
     "xmlns": "http://www.sitemaps.org/schemas/sitemap/0.9"
 })
 
-# Page d'accueil dans le sitemap
 url_elem = ET.SubElement(urlset, "url")
 loc = ET.SubElement(url_elem, "loc")
 loc.text = f"{BASE_URL}/"
 
-# Toutes les sous-pages dans le sitemap
 for file_name in generated_files:
     url_elem = ET.SubElement(urlset, "url")
     loc = ET.SubElement(url_elem, "loc")
@@ -230,7 +365,7 @@ tree = ET.ElementTree(urlset)
 ET.indent(tree, space="  ", level=0)
 tree.write(os.path.join(OUTPUT_DIR, "sitemap.xml"), encoding="utf-8", xml_declaration=True)
 
-# 5. Génération automatique du robots.txt
+# 5. Génération du robots.txt
 robots_content = f"""User-agent: *
 Allow: /
 
@@ -239,8 +374,4 @@ Sitemap: {BASE_URL}/sitemap.xml
 with open(os.path.join(OUTPUT_DIR, "robots.txt"), "w", encoding="utf-8") as f:
     f.write(robots_content)
 
-print(f" SUCCÈS :")
-print(f" - {len(generated_files)} pages HTML générées dans le dossier '{OUTPUT_DIR}/'")
-print(f" - index.html généré avec balise de vérification Google")
-print(f" - sitemap.xml généré avec {len(generated_files) + 1} URLs sous {BASE_URL}")
-print(f" - robots.txt généré")
+print(f"✨ SUCCÈS : {len(generated_files)} pages HTML avec blocs d'affiliation régénérées avec succès !")
